@@ -7,7 +7,9 @@ module.exports = defineConfig({
     redisUrl: process.env.REDIS_URL,
     databaseUrl: process.env.DATABASE_URL,
     databaseDriverOptions: {
-      ssl: false,
+      ssl: process.env.DATABASE_URL?.includes("localhost") || process.env.DATABASE_URL?.includes("127.0.0.1") || !process.env.DATABASE_URL
+        ? false
+        : { rejectUnauthorized: false },
       connectionTimeoutMillis: 10000,
     },
     http: {
