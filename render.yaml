@@ -3,7 +3,7 @@ services:
     name: buildmart-backend
     env: node
     plan: free
-    buildCommand: pnpm build
+    buildCommand: npm install -g pnpm && cd /opt/render/project/src && pnpm install && pnpm --filter @dtc/backend build
     startCommand: pnpm start
     rootDir: apps/backend
     envVars:
