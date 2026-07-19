@@ -5,7 +5,7 @@ services:
     plan: free
     buildCommand: pnpm build
     startCommand: pnpm start
-    rootDirectory: apps/backend
+    rootDir: apps/backend
     envVars:
       - key: DATABASE_URL
         value: postgresql://neondb_owner:npg_Mi07QOaLcCHu@ep-soft-feather-av9wiizj-pooler.c-11.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
