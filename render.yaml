@@ -9,8 +9,6 @@ services:
     envVars:
       - key: DATABASE_URL
         value: postgresql://neondb_owner:npg_Mi07QOaLcCHu@ep-soft-feather-av9wiizj-pooler.c-11.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
-      - key: REDIS_URL
-        value: "" # Enter your Upstash Redis URL here or in the Render Dashboard
       - key: JWT_SECRET
         value: supersecretjwtkey
       - key: COOKIE_SECRET
