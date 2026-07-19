@@ -5,6 +5,7 @@ import { getCategoryByHandle, listCategories } from "@lib/data/categories"
 import { listRegions } from "@lib/data/regions"
 import { HttpTypes, StoreRegion } from "@medusajs/types"
 import CategoryTemplate from "@modules/categories/templates"
+import CategoryListing from "@modules/categories/templates/category-listing"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import { parseOptionValueIds } from "@lib/util/product-option-filters"
 
@@ -48,15 +49,21 @@ export async function generateStaticParams() {
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params
+  if (!params.category || params.category.length === 0) {
+    return {
+      title: "All Categories | BuildMart",
+      description: "Browse our complete range of building materials by category",
+    }
+  }
   try {
     const productCategory = await getCategoryByHandle(params.category)
 
-    const title = productCategory.name + " | Medusa Store"
+    const title = productCategory.name
 
     const description = productCategory.description ?? `${title} category.`
 
     return {
-      title: `${title} | Medusa Store`,
+      title: `${title} | BuildMart`,
       description,
       alternates: {
         canonical: `${params.category.join("/")}`,
@@ -72,6 +79,11 @@ export default async function CategoryPage(props: Props) {
   const params = await props.params
   const { sortBy, page } = searchParams
   const optionValueIds = parseOptionValueIds(searchParams)
+
+  if (!params.category || params.category.length === 0) {
+    const categories = await listCategories()
+    return <CategoryListing categories={categories || []} />
+  }
 
   const productCategory = await getCategoryByHandle(params.category)
 

@@ -70,25 +70,58 @@ export default async function PaginatedProducts({
 
   const totalPages = Math.ceil(count / PRODUCT_LIMIT)
 
+  if (products.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 px-4">
+        <div className="w-32 h-32 rounded-2xl bg-neutral-100 flex items-center justify-center mb-6">
+          <svg className="w-16 h-16 text-neutral-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        </div>
+        <h3 className="text-display-xs font-bold text-neutral-800 mb-2">No products found</h3>
+        <p className="text-body-sm text-neutral-500 text-center max-w-md mb-6">
+          We couldn&apos;t find any products matching your filters. Try adjusting your search criteria.
+        </p>
+        <div className="flex items-center gap-3">
+          <a
+            href={`/${countryCode}/store`}
+            className="btn-primary text-body-sm"
+          >
+            Clear Filters
+          </a>
+          <a
+            href={`/${countryCode}`}
+            className="btn-secondary text-body-sm"
+          >
+            Continue Shopping
+          </a>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
-      <ul
-        className="grid grid-cols-2 w-full small:grid-cols-3 medium:grid-cols-4 gap-x-6 gap-y-8"
+      <div
+        className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5"
         data-testid="products-list"
       >
-        {products.map((p) => {
-          return (
-            <li key={p.id}>
-              <ProductPreview product={p} region={region} />
-            </li>
-          )
-        })}
-      </ul>
+        {products.map((p, idx) => (
+          <div
+            key={p.id}
+            className="animate-fade-in-up"
+            style={{ animationDelay: `${(idx % 12) * 40}ms`, animationFillMode: "backwards" }}
+          >
+            <ProductPreview product={p} region={region} isFeatured={idx < 3} />
+          </div>
+        ))}
+      </div>
       {totalPages > 1 && (
         <Pagination
           data-testid="product-pagination"
           page={page}
           totalPages={totalPages}
+          countryCode={countryCode}
         />
       )}
     </>

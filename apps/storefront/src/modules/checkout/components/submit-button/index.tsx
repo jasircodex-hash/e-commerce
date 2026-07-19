@@ -19,13 +19,15 @@ export function SubmitButton({
 }) {
   const { pending } = useFormStatus()
 
+  const mappedSize = size === "medium" ? "base" : size === "small" ? "small" : "large"
+
   return (
     <Button
-      size={size}
+      size={mappedSize}
       className={className}
       type="submit"
       isLoading={pending}
-      variant={variant || "primary"}
+      variant={variant === "transparent" ? "ghost" : (variant || "primary") as any}
       data-testid={dataTestId}
     >
       {children}

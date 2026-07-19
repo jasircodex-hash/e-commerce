@@ -1,7 +1,7 @@
 import clsx from "clsx"
 import {
-  ButtonHTMLAttributes,
   forwardRef,
+  ButtonHTMLAttributes,
   HTMLAttributes,
   InputHTMLAttributes,
   LabelHTMLAttributes,
@@ -10,96 +10,7 @@ import {
   ThHTMLAttributes,
 } from "react"
 
-// TODO: Add Toaster component back when needed for notifications
-
-// Re-export clsx as clx for compatibility
 export { clsx as clx }
-
-// Text Component
-type TextProps = HTMLAttributes<HTMLParagraphElement> & {
-  as?: "p" | "span" | "div"
-}
-
-export const Text = forwardRef<HTMLParagraphElement, TextProps>(
-  ({ className, as: Component = "p", children, ...props }, ref) => {
-    return (
-      <Component ref={ref} className={clsx("text-base", className)} {...props}>
-        {children}
-      </Component>
-    )
-  }
-)
-Text.displayName = "Text"
-
-// Heading Component
-type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
-  level?: "h1" | "h2" | "h3"
-}
-
-export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
-  ({ className, level: Component = "h2", children, ...props }, ref) => {
-    return (
-      <Component
-        ref={ref}
-        className={clsx(
-          "font-semibold",
-          Component === "h1" && "text-3xl",
-          Component === "h2" && "text-2xl",
-          Component === "h3" && "text-xl",
-          className
-        )}
-        {...props}
-      >
-        {children}
-      </Component>
-    )
-  }
-)
-Heading.displayName = "Heading"
-
-// Button Component
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "transparent"
-  size?: "small" | "medium" | "large"
-  isLoading?: boolean
-}
-
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant = "primary",
-      size = "medium",
-      isLoading,
-      disabled,
-      children,
-      ...props
-    },
-    ref
-  ) => {
-    return (
-      <button
-        ref={ref}
-        disabled={disabled || isLoading}
-        className={clsx(
-          "inline-flex gap-2 items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-          variant === "primary" && "bg-black text-white hover:bg-gray-800",
-          variant === "secondary" &&
-            "bg-white text-black border border-gray-200 hover:bg-gray-50",
-          variant === "transparent" && "bg-transparent hover:bg-gray-100",
-          size === "small" && "h-8 px-3 text-sm",
-          size === "medium" && "h-10 px-4",
-          size === "large" && "h-12 px-6 text-lg",
-          className
-        )}
-        {...props}
-      >
-        {isLoading ? "Loading..." : children}
-      </button>
-    )
-  }
-)
-Button.displayName = "Button"
 
 // Container Component
 type ContainerProps = HTMLAttributes<HTMLDivElement>
@@ -118,6 +29,149 @@ export const Container = forwardRef<HTMLDivElement, ContainerProps>(
   }
 )
 Container.displayName = "Container"
+
+// Text Component
+type TextSize = "base" | "small" | "xsmall" | "large"
+
+type TextProps = HTMLAttributes<HTMLParagraphElement> & {
+  size?: TextSize
+  as?: "p" | "span"
+}
+
+export const Text = forwardRef<HTMLParagraphElement, TextProps>(
+  ({ className, size = "base", as: Component = "p", children, ...props }, ref) => {
+    return (
+      <Component
+        ref={ref}
+        className={clsx(
+          size === "xsmall" && "text-xs",
+          size === "small" && "text-sm",
+          size === "base" && "text-base",
+          size === "large" && "text-lg",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </Component>
+    )
+  }
+)
+Text.displayName = "Text"
+
+// Heading Component
+type HeadingLevel = "h1" | "h2" | "h3"
+
+type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
+  level?: HeadingLevel
+}
+
+export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
+  ({ className, level: Tag = "h1", children, ...props }, ref) => {
+    return (
+      <Tag
+        ref={ref}
+        className={clsx(
+          Tag === "h1" && "text-3xl font-bold",
+          Tag === "h2" && "text-2xl font-semibold",
+          Tag === "h3" && "text-xl font-medium",
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </Tag>
+    )
+  }
+)
+Heading.displayName = "Heading"
+
+// Label Component
+type LabelProps = LabelHTMLAttributes<HTMLLabelElement>
+
+export const Label = forwardRef<HTMLLabelElement, LabelProps>(
+  ({ className, children, ...props }, ref) => {
+    return (
+      <label
+        ref={ref}
+        className={clsx("text-sm font-medium text-gray-700", className)}
+        {...props}
+      >
+        {children}
+      </label>
+    )
+  }
+)
+Label.displayName = "Label"
+
+// Button Component
+type ButtonVariant = "primary" | "secondary" | "danger" | "ghost"
+type ButtonSize = "base" | "small" | "xsmall" | "large"
+
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: ButtonVariant
+  size?: ButtonSize
+  isLoading?: boolean
+}
+
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      className,
+      variant = "primary",
+      size = "base",
+      isLoading = false,
+      children,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
+    return (
+      <button
+        ref={ref}
+        disabled={disabled || isLoading}
+        className={clsx(
+          "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          variant === "primary" && "bg-gray-900 text-white hover:bg-gray-800",
+          variant === "secondary" && "bg-gray-100 text-gray-900 hover:bg-gray-200",
+          variant === "danger" && "bg-red-600 text-white hover:bg-red-700",
+          variant === "ghost" && "text-gray-700 hover:bg-gray-100",
+          size === "xsmall" && "h-7 px-2 text-xs",
+          size === "small" && "h-8 px-3 text-sm",
+          size === "base" && "h-10 px-4 text-sm",
+          size === "large" && "h-12 px-6 text-base",
+          className
+        )}
+        {...props}
+      >
+        {isLoading && (
+          <svg
+            className="mr-2 h-4 w-4 animate-spin"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+            />
+          </svg>
+        )}
+        {children}
+      </button>
+    )
+  }
+)
+Button.displayName = "Button"
 
 // Badge Component
 type BadgeProps = HTMLAttributes<HTMLSpanElement> & {
@@ -189,24 +243,6 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(
   }
 )
 IconButton.displayName = "IconButton"
-
-// Label Component
-type LabelProps = LabelHTMLAttributes<HTMLLabelElement>
-
-export const Label = forwardRef<HTMLLabelElement, LabelProps>(
-  ({ className, children, ...props }, ref) => {
-    return (
-      <label
-        ref={ref}
-        className={clsx("text-sm font-medium", className)}
-        {...props}
-      >
-        {children}
-      </label>
-    )
-  }
-)
-Label.displayName = "Label"
 
 // Input Component
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
