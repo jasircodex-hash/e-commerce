@@ -303,13 +303,14 @@ function productToInput(
     return base
   })
 
-  const options = hasCustomOptions
-    ? p.options!.map((o) => ({
-        id: optMap.get(o.title),
-        values: o.values.map((val) => ({
-          value: val,
-        })),
-      }))
+  const options: any = hasCustomOptions
+    ? p.options!.map((o) => {
+        const id = optMap.get(o.title)
+        return {
+          ...(id ? { id } : { title: o.title }),
+          values: o.values,
+        }
+      })
     : [{ title: "Default", values: p.variants.map((v) => v.title) }]
 
   const images = (p.images || [img(Math.floor(Math.random() * 10000))]).map((url) => ({
@@ -401,7 +402,7 @@ export default async function initial_data_seed({ container }: { container: Medu
     const profiles = await fulfillmentModuleService.createShippingProfiles([
       { name: "Default Shipping", type: "default" },
     ])
-    shippingProfile = profiles[0]
+    shippingProfile = profiles[0] as any
     if (!shippingProfile) {
       const { data: [found] } = await query.graph({ entity: "shipping_profile", fields: ["id"] })
       shippingProfile = found

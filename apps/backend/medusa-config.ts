@@ -21,7 +21,6 @@ module.exports = defineConfig({
     },
   },
   admin: {
-    serve: true,
     path: '/app',
     vite: (config) => {
       return {
